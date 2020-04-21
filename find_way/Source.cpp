@@ -2,6 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <list>
+//#include <string>
 
 #define H 40
 #define W 80
@@ -70,7 +71,7 @@ int check(int x1, int y1, int x2, int y2)
     {
         auto i = *stek.begin();
         stek.pop_front();
-        if (i.x == x2 && i.y == y2)
+        if (i.x == x2 && i.y == y2 && da)
         {           
             da = 0;
             back_check(i.z, x2, y2);
@@ -117,6 +118,10 @@ int main()
     RectangleShape rectangle(Vector2f(19, 19));
     map[x1][y1] = 0;
     map[x2][y2] = -5;
+    //Font font;
+    //font.loadFromFile("font.ttf");
+    //Text text("", font, 12);
+    //text.setFillColor(Color::Green);
     while (window.isOpen())
     {
         auto pos = window.mapPixelToCoords(Mouse::getPosition(window));
@@ -199,6 +204,9 @@ int main()
                     rectangle.setFillColor(Color(0, 0, 255));
                 rectangle.setPosition(x * 20, y * 20);
                 window.draw(rectangle);
+                //text.setString(std::to_string(map[x][y]));
+                //text.setPosition(x * 20, y * 20);
+                //window.draw(text);
             }
         window.display();
     }
