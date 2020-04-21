@@ -7,3 +7,5 @@
 [LMB] to set the wall
 
 [RMB] to remove the wall
+
+[LALT] to chenge finding mode
