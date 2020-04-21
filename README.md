@@ -9,3 +9,5 @@
 [RMB] to remove the wall
 
 [LALT] to chenge finding mode
+
+[LCTRL] to enable/disable debug mode
