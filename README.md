@@ -11,3 +11,5 @@
 [LALT] to chenge finding mode
 
 [LCTRL] to enable/disable debug mode
+
+[ENTER] to enable/disable diagonal checking
