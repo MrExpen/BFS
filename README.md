@@ -13,3 +13,5 @@
 [LCTRL] to enable/disable debug mode
 
 [ENTER] to enable/disable diagonal checking
+
+[BACKSPACE] to enable/disable way
