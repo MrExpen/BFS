@@ -2,7 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <list>
-//#include <string>
+#include <string>
 
 #define H 40
 #define W 80
@@ -115,13 +115,14 @@ int main()
         for (int x = 0; x < W; x++)
             map[x][y] = -1;
     int x1 = 5, y1 = 10, x2 = 15, y2 = 10;
+    bool debug = 0;
     RectangleShape rectangle(Vector2f(19, 19));
     map[x1][y1] = 0;
     map[x2][y2] = -5;
-    //Font font;
-    //font.loadFromFile("font.ttf");
-    //Text text("", font, 12);
-    //text.setFillColor(Color::Green);
+    Font font;
+    font.loadFromFile("font.ttf");
+    Text text("", font, 12);
+    text.setFillColor(Color::Black);
     while (window.isOpen())
     {
         auto pos = window.mapPixelToCoords(Mouse::getPosition(window));
@@ -136,6 +137,8 @@ int main()
             {
                 if (event.key.code == Keyboard::LAlt)
                     full = !full;
+                if (event.key.code == Keyboard::LControl)
+                    debug = !debug;
             }
         }
         if (X >= 0 && X < W && Y >= 0 && Y < H)
@@ -204,9 +207,12 @@ int main()
                     rectangle.setFillColor(Color(0, 0, 255));
                 rectangle.setPosition(x * 20, y * 20);
                 window.draw(rectangle);
-                //text.setString(std::to_string(map[x][y]));
-                //text.setPosition(x * 20, y * 20);
-                //window.draw(text);
+                if (debug)
+                {
+                    text.setString(std::to_string(map[x][y]));
+                    text.setPosition(x * 20, y * 20);
+                    window.draw(text);
+                }
             }
         window.display();
     }
