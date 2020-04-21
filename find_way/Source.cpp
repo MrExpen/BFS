@@ -5,7 +5,9 @@
 
 #define H 40
 #define W 80
+
 int map[W][H];
+bool full = 1;
 
 using namespace sf;
 
@@ -62,41 +64,47 @@ int back_check(int z, int x, int y)
 int check(int x1, int y1, int x2, int y2)
 {
     std::list<MyStruct> stek;
+    bool da = 1;
     stek.push_back(MyStruct(x1, y1, 0));
     while (stek.size() != 0)
     {
         auto i = *stek.begin();
         stek.pop_front();
         if (i.x == x2 && i.y == y2)
-        {
+        {           
+            da = 0;
             back_check(i.z, x2, y2);
-            return 0;
+            if (full)
+            {
+                return 0;
+            }
         }
         if (i.x > 0)
-            if (map[i.x - 1][i.y] == -1 || (i.x - 1 == x2 && i.y == y2))
+            if (map[i.x - 1][i.y] == -1 || ((i.x - 1 == x2 && i.y == y2) && da))
             {
                 stek.push_back(MyStruct(i.x - 1, i.y, i.z + 1));
                 map[i.x - 1][i.y] = i.z + 1;
             }
         if (i.x < W - 1)
-            if (map[i.x + 1][i.y] == -1 || (i.x + 1 == x2 && i.y == y2))
+            if (map[i.x + 1][i.y] == -1 || ((i.x + 1 == x2 && i.y == y2) && da))
             {
                 stek.push_back(MyStruct(i.x + 1, i.y, i.z + 1));
                 map[i.x + 1][i.y] = i.z + 1;
             }
         if (i.y > 0)
-            if (map[i.x][i.y - 1] == -1 || (i.x == x2 && i.y - 1 == y2))
+            if (map[i.x][i.y - 1] == -1 || ((i.x == x2 && i.y - 1 == y2) && da))
             {
                 stek.push_back(MyStruct(i.x, i.y - 1, i.z + 1));
                 map[i.x][i.y - 1] = i.z + 1;
             }
         if (i.y < H - 1)
-            if (map[i.x][i.y + 1] == -1 || (i.x == x2 && i.y + 1 == y2))
+            if (map[i.x][i.y + 1] == -1 || ((i.x == x2 && i.y + 1 == y2) && da))
             {
                 stek.push_back(MyStruct(i.x, i.y + 1, i.z + 1));
                 map[i.x][i.y + 1] = i.z + 1;
             }
     }
+    return 0;
 };
 
 int main()
@@ -108,7 +116,7 @@ int main()
     int x1 = 5, y1 = 10, x2 = 15, y2 = 10;
     RectangleShape rectangle(Vector2f(19, 19));
     map[x1][y1] = 0;
-    map[x2][y2] = -3;
+    map[x2][y2] = -5;
     while (window.isOpen())
     {
         auto pos = window.mapPixelToCoords(Mouse::getPosition(window));
@@ -119,6 +127,11 @@ int main()
         {
             if (event.type == Event::Closed)
                 window.close();
+            if (event.type == Event::KeyPressed)
+            {
+                if (event.key.code == Keyboard::LAlt)
+                    full = !full;
+            }
         }
         if (X >= 0 && X < W && Y >= 0 && Y < H)
         {
@@ -146,7 +159,7 @@ int main()
                     map[x2][y2] = -1;
                     x2 = pos.x / 20;
                     y2 = pos.y / 20;
-                    map[x2][y2] = -3;
+                    map[x2][y2] = -5;
                 }
             }
         }
@@ -170,7 +183,7 @@ int main()
                 case 0:
                     rectangle.setFillColor(Color(0, 255, 0));
                     break;
-                case -3:
+                case -5:
                     rectangle.setFillColor(Color(0, 0, 255));
                     break;
                 case -4:
