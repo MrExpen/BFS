@@ -8,7 +8,7 @@
 #define W (80 + 2)
 
 int map[W][H];
-bool full = 0, diagonal = 0;
+bool full = 0, diagonal = 0, net = 0;
 
 using namespace sf;
 
@@ -64,7 +64,7 @@ int back_check(int z, int x, int y)
         }
         if (map[x - 1][y + 1] == z - 1)
         {
-            map[x - 1][y] = -4;
+            map[x - 1][y + 1] = -4;
             back_check(z - 1, x - 1, y + 1);
             return 1;
         }
@@ -96,10 +96,34 @@ int check(int x1, int y1, int x2, int y2)
         if (i.x == x2 && i.y == y2 && da)
         {
             da = 0;
-            back_check(i.z, x2, y2);
+            if (!net)
+                back_check(i.z, x2, y2);
             if (!full)
             {
                 return 0;
+            }
+        }
+        if (diagonal)
+        {
+            if (map[i.x - 1][i.y - 1] == -1 || ((i.x - 1 == x2 && i.y - 1 == y2) && da))
+            {
+                stek.push_back(MyStruct(i.x - 1, i.y - 1, i.z + 1));
+                map[i.x - 1][i.y - 1] = i.z + 1;
+            }
+            if (map[i.x - 1][i.y + 1] == -1 || ((i.x - 1 == x2 && i.y + 1 == y2) && da))
+            {
+                stek.push_back(MyStruct(i.x - 1, i.y + 1, i.z + 1));
+                map[i.x - 1][i.y + 1] = i.z + 1;
+            }
+            if (map[i.x + 1][i.y - 1] == -1 || ((i.x + 1 == x2 && i.y - 1 == y2) && da))
+            {
+                stek.push_back(MyStruct(i.x + 1, i.y - 1, i.z + 1));
+                map[i.x + 1][i.y - 1] = i.z + 1;
+            }
+            if (map[i.x + 1][i.y + 1] == -1 || ((i.x + 1 == x2 && i.y + 1 == y2) && da))
+            {
+                stek.push_back(MyStruct(i.x + 1, i.y + 1, i.z + 1));
+                map[i.x + 1][i.y + 1] = i.z + 1;
             }
         }
         if (map[i.x - 1][i.y] == -1 || ((i.x - 1 == x2 && i.y == y2) && da))
@@ -121,29 +145,6 @@ int check(int x1, int y1, int x2, int y2)
         {
             stek.push_back(MyStruct(i.x, i.y + 1, i.z + 1));
             map[i.x][i.y + 1] = i.z + 1;
-        }
-        if (diagonal)
-        {
-            if (map[i.x - 1][i.y - 1] == -1 || ((i.x - 1 == x2 && i.y - 1 == y2) && da))
-            {
-                stek.push_back(MyStruct(i.x - 1, i.y - 1, i.z + 1));
-                map[i.x - 1][i.y - 1] = i.z + 1;
-            }
-            if (map[i.x - 1][i.y + 1] == -1 || ((i.x - 1 == x2 && i.y + 1 == y2) && da))
-            {
-                stek.push_back(MyStruct(i.x - 1, i.y + 1, i.z + 1));
-                map[i.x - 1][i.y + 1] = i.z + 1;
-            } 
-            if (map[i.x + 1][i.y - 1] == -1 || ((i.x + 1 == x2 && i.y - 1 == y2) && da))
-            {
-                stek.push_back(MyStruct(i.x + 1, i.y - 1, i.z + 1));
-                map[i.x + 1][i.y - 1] = i.z + 1;
-            }
-            if (map[i.x + 1][i.y + 1] == -1 || ((i.x  + 1 == x2 && i.y + 1 == y2) && da))
-            {
-                stek.push_back(MyStruct(i.x + 1, i.y + 1, i.z + 1));
-                map[i.x + 1][i.y + 1] = i.z + 1;
-            }
         }
     }
     return 0;
@@ -185,6 +186,8 @@ int main()
                     debug = !debug;
                 if (event.key.code == Keyboard::Enter)
                     diagonal = !diagonal;
+                if (event.key.code == Keyboard::BackSpace)
+                    net = !net;
             }
         }
         if (X > 0 && X < W - 1 && Y > 0 && Y < H - 1)
